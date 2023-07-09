@@ -4,7 +4,6 @@ use super::super::{
     pb,
     validator::Validator,
 };
-use super::authorization::{Kind as AuthKind, Scope as AuthScope};
 use crate::character_validator::Response as ValidatorResponse;
 
 pub struct Service<A> {
@@ -17,8 +16,8 @@ impl<A: Accessor> Service<A> {
         &self,
         name: &str,
         token: &str,
-        kind: AuthKind,
-        scope: AuthScope,
+        kind: pb::AuthKind,
+        scope: pb::AuthScope,
     ) -> Result<ValidatorResponse, Error> {
         // Format the name to match the authorization endpoint
         let name = get_auth_name(name, kind, scope);
@@ -38,8 +37,8 @@ impl<A: Accessor> Service<A> {
             .authorize(
                 &req.name,
                 &req.refresh_token,
-                AuthKind::Read,
-                AuthScope::Items,
+                pb::AuthKind::Read,
+                pb::AuthScope::Items,
             )
             .await?;
         if auth_rep.valid {
@@ -55,8 +54,8 @@ impl<A: Accessor> Service<A> {
             .authorize(
                 &req.name,
                 &req.refresh_token,
-                AuthKind::Write,
-                AuthScope::Items,
+                pb::AuthKind::Write,
+                pb::AuthScope::Items,
             )
             .await?;
         if auth_rep.valid {
@@ -75,8 +74,8 @@ impl<A: Accessor> Service<A> {
             .authorize(
                 &req.name,
                 &req.refresh_token,
-                AuthKind::Read,
-                AuthScope::Characters,
+                pb::AuthKind::Read,
+                pb::AuthScope::Characters,
             )
             .await?;
         if auth_rep.valid {
@@ -95,8 +94,8 @@ impl<A: Accessor> Service<A> {
             .authorize(
                 &req.name,
                 &req.refresh_token,
-                AuthKind::Write,
-                AuthScope::Characters,
+                pb::AuthKind::Write,
+                pb::AuthScope::Characters,
             )
             .await?;
         if auth_rep.valid {
@@ -115,8 +114,8 @@ impl<A: Accessor> Service<A> {
             .authorize(
                 &req.name,
                 &req.refresh_token,
-                AuthKind::Write,
-                AuthScope::Characters,
+                pb::AuthKind::Write,
+                pb::AuthScope::Characters,
             )
             .await?;
         if auth_rep.valid {
@@ -129,6 +128,6 @@ impl<A: Accessor> Service<A> {
 }
 
 // Format the name to match the authorization endpoint
-pub fn get_auth_name(name: &str, kind: AuthKind, scope: AuthScope) -> String {
+pub fn get_auth_name(name: &str, kind: pb::AuthKind, scope: pb::AuthScope) -> String {
     format!("{}_{}_{}", name, kind.as_str(), scope.as_str())
 }

@@ -119,11 +119,11 @@ pub struct ListCharactersReq {
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// false for read, true for write
-    #[prost(bool, tag="2")]
-    pub auth_kind: bool,
+    #[prost(enumeration="AuthKind", tag="2")]
+    pub auth_kind: i32,
     /// false for items, true for characters
-    #[prost(bool, tag="3")]
-    pub auth_scope: bool,
+    #[prost(enumeration="AuthScope", tag="3")]
+    pub auth_scope: i32,
     /// ESI refresh token (for authentication)
     #[prost(string, tag="4")]
     pub refresh_token: ::prost::alloc::string::String,
@@ -145,11 +145,11 @@ pub struct AddCharactersReq {
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// false for read, true for write
-    #[prost(bool, tag="2")]
-    pub auth_kind: bool,
+    #[prost(enumeration="AuthKind", tag="2")]
+    pub auth_kind: i32,
     /// false for items, true for characters
-    #[prost(bool, tag="3")]
-    pub auth_scope: bool,
+    #[prost(enumeration="AuthScope", tag="3")]
+    pub auth_scope: i32,
     /// ESI refresh token (for authentication)
     #[prost(string, tag="4")]
     pub refresh_token: ::prost::alloc::string::String,
@@ -173,11 +173,11 @@ pub struct DelCharactersReq {
     #[prost(string, tag="1")]
     pub name: ::prost::alloc::string::String,
     /// false for read, true for write
-    #[prost(bool, tag="2")]
-    pub auth_kind: bool,
+    #[prost(enumeration="AuthKind", tag="2")]
+    pub auth_kind: i32,
     /// false for items, true for characters
-    #[prost(bool, tag="3")]
-    pub auth_scope: bool,
+    #[prost(enumeration="AuthScope", tag="3")]
+    pub auth_scope: i32,
     /// ESI refresh token (for authentication)
     #[prost(string, tag="4")]
     pub refresh_token: ::prost::alloc::string::String,
@@ -219,7 +219,9 @@ impl Query {
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum AuthKind {
+    /// read-only access
     Read = 0,
+    /// read-write access
     Write = 1,
 }
 impl AuthKind {
@@ -238,6 +240,38 @@ impl AuthKind {
         match value {
             "READ" => Some(Self::Read),
             "WRITE" => Some(Self::Write),
+            _ => None,
+        }
+    }
+}
+#[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
+#[repr(i32)]
+pub enum AuthScope {
+    /// access to items
+    Items = 0,
+    /// access to characters
+    Characters = 1,
+    /// access to contracts
+    Contracts = 2,
+}
+impl AuthScope {
+    /// String value of the enum field names used in the ProtoBuf definition.
+    ///
+    /// The values are not transformed in any way and thus are considered stable
+    /// (if the ProtoBuf definition does not change) and safe for programmatic use.
+    pub fn as_str_name(&self) -> &'static str {
+        match self {
+            AuthScope::Items => "ITEMS",
+            AuthScope::Characters => "CHARACTERS",
+            AuthScope::Contracts => "CONTRACTS",
+        }
+    }
+    /// Creates an enum from field names used in the ProtoBuf definition.
+    pub fn from_str_name(value: &str) -> ::core::option::Option<Self> {
+        match value {
+            "ITEMS" => Some(Self::Items),
+            "CHARACTERS" => Some(Self::Characters),
+            "CONTRACTS" => Some(Self::Contracts),
             _ => None,
         }
     }
