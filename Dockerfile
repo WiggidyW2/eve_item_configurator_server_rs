@@ -17,6 +17,7 @@
 FROM rust:1.69-bullseye
 COPY ./src src
 COPY ./Cargo.toml Cargo.toml
+RUN apt-get update && apt-get install -y protobuf-compiler
 RUN cargo build --release
 RUN mv target/release/wetc_item_configurator_server /root/service
 
