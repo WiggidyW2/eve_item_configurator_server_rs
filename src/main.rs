@@ -64,6 +64,9 @@ async fn main() -> Result<(), Error> {
         env::service_address()?,
         &mut tonic_server,
         true,
+        &env::weve_esi_address()?,
+        env::buyback_address()?,
+        env::buyback_corp()?,
     )
     .await?;
     Ok(())

@@ -3,6 +3,7 @@ use super::{
     service::{JsonError, ProtoFieldError},
 };
 use crate::character_validator::Error as ValidatorError;
+use prost_twirp::ProstTwirpError;
 
 #[derive(Debug)]
 pub enum Error {
@@ -11,6 +12,9 @@ pub enum Error {
     AccessorError(AccessorError),
     JsonError(JsonError),
     ServeError(tonic::transport::Error),
+    WeveEsi(ProstTwirpError),
+    BuybackBuy(tonic::Status),
+    BuybackCheck(tonic::Status),
 }
 
 impl From<AccessorError> for Error {
@@ -61,6 +65,40 @@ impl std::fmt::Display for Error {
             Self::ServeError(e) => {
                 write!(f, "ServeError: {}", e)
             }
+            Self::WeveEsi(e) => write!(
+                f,
+                "WeveEsiError({})",
+                match e {
+                    ProstTwirpError::AfterBodyError {
+                        body,
+                        method,
+                        version,
+                        headers,
+                        status,
+                        err,
+                    } => {
+                        format!(
+                        "Body: {}, Method: {:?}, Version: {:?}, Headers: {:?}, Status: {:?}, Error: {}",
+                        match std::str::from_utf8(body) {
+                            Ok(s) => s.to_string(),
+                            Err(e) => e.to_string(),
+                        },
+                        method,
+                        version,
+                        headers,
+                        status,
+                        err,
+                    )
+                    }
+                    other => format!("{}", other),
+                }
+            ),
+            Self::BuybackBuy(e) => {
+                write!(f, "BuybackBuyError: {}", e)
+            }
+            Self::BuybackCheck(e) => {
+                write!(f, "BuybackCheckError: {}", e)
+            }
         }
     }
 }
@@ -75,6 +113,9 @@ impl Into<tonic::Status> for Error {
             Self::AccessorError(e) => e.into(),
             Self::JsonError(e) => e.into(),
             Self::ServeError(e) => tonic::Status::internal(e.to_string()),
+            Self::WeveEsi(e) => tonic::Status::internal(e.to_string()),
+            Self::BuybackBuy(e) => e,
+            Self::BuybackCheck(e) => e,
         }
     }
 }

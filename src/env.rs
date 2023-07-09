@@ -2,9 +2,25 @@ use crate::{
     error::{EnvError, EnvErrorInner},
     firestore_accessor::TokenSourceType,
     gcstorage_accessor::PredefinedObjectAcl,
+    server::pb,
     sqlite_accessor::SqlitePoolOptions,
 };
 use std::{env::var, net::SocketAddr, num::ParseIntError, str::FromStr, time::Duration};
+
+pub fn weve_esi_address() -> Result<String, EnvError> {
+    env_get_assert("WEVE_ESI_ADDRESS")
+}
+
+pub fn buyback_address() -> Result<String, EnvError> {
+    env_get_assert("BUYBACK_ADDRESS")
+}
+
+pub fn buyback_corp() -> Result<pb::weve_esi::Entity, EnvError> {
+    Ok(pb::weve_esi::Entity {
+        id: number_from_str("BUYBACK_CORP_ID", env_get_assert("BUYBACK_CORP_ID")?)?,
+        token: env_get_assert("BUYBACK_CORP_TOKEN")?,
+    })
+}
 
 pub fn esi_client_id() -> Result<String, EnvError> {
     env_get_assert("ESI_CLIENT_ID")

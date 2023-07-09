@@ -31,6 +31,11 @@ pub mod item_configurator_server {
             &self,
             request: tonic::Request<super::DelCharactersReq>,
         ) -> Result<tonic::Response<super::DelCharactersRep>, tonic::Status>;
+        ///
+        async fn buyback_contracts(
+            &self,
+            request: tonic::Request<super::BuybackContractsReq>,
+        ) -> Result<tonic::Response<super::BuybackContractsRep>, tonic::Status>;
     }
     ///
     #[derive(Debug)]
@@ -274,6 +279,46 @@ pub mod item_configurator_server {
                     let fut = async move {
                         let inner = inner.0;
                         let method = DelCharactersSvc(inner);
+                        let codec = tonic::codec::ProstCodec::default();
+                        let mut grpc = tonic::server::Grpc::new(codec)
+                            .apply_compression_config(
+                                accept_compression_encodings,
+                                send_compression_encodings,
+                            );
+                        let res = grpc.unary(method, req).await;
+                        Ok(res)
+                    };
+                    Box::pin(fut)
+                }
+                "/item_configurator_proto.ItemConfigurator/BuybackContracts" => {
+                    #[allow(non_camel_case_types)]
+                    struct BuybackContractsSvc<T: ItemConfigurator>(pub Arc<T>);
+                    impl<
+                        T: ItemConfigurator,
+                    > tonic::server::UnaryService<super::BuybackContractsReq>
+                    for BuybackContractsSvc<T> {
+                        type Response = super::BuybackContractsRep;
+                        type Future = BoxFuture<
+                            tonic::Response<Self::Response>,
+                            tonic::Status,
+                        >;
+                        fn call(
+                            &mut self,
+                            request: tonic::Request<super::BuybackContractsReq>,
+                        ) -> Self::Future {
+                            let inner = self.0.clone();
+                            let fut = async move {
+                                (*inner).buyback_contracts(request).await
+                            };
+                            Box::pin(fut)
+                        }
+                    }
+                    let accept_compression_encodings = self.accept_compression_encodings;
+                    let send_compression_encodings = self.send_compression_encodings;
+                    let inner = self.inner.clone();
+                    let fut = async move {
+                        let inner = inner.0;
+                        let method = BuybackContractsSvc(inner);
                         let codec = tonic::codec::ProstCodec::default();
                         let mut grpc = tonic::server::Grpc::new(codec)
                             .apply_compression_config(

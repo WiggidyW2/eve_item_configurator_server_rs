@@ -22,6 +22,7 @@ pub trait Accessor:
 {
 }
 
+#[derive(Clone)]
 pub struct AccessorWrapper<A>(pub A);
 
 impl<A: Accessor> AccessorWrapper<A> {

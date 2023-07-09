@@ -6,11 +6,13 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+prost-twirp = { git = "https://github.com/shawnblakesley/prost-twirp.git" }
 sqlx = { version = "0.6.3", features = ["sqlite", "runtime-tokio-native-tls"] }
 tokio = { version = "1.28", features = ["rt-multi-thread"] }
 tonic = { version = "0.9" }
 hyper = { version = "0.14", features = ["client", "http1", "tcp"] }
 hyper-tls = { version = "0.5" }
+prost-wkt-types = { version = "0.4" }
 serde = { version = "1.0", features = ["derive"] }
 jsonwebtoken = { version = "8.3.0" }
 serde_json = { version = "1.0" }
@@ -23,3 +25,4 @@ serde_yaml = { version = "0.9" }
 futures = { version = "0.3" }
 gcloud-sdk = { version = "0.20" }
 firestore = { version = "0.32" }
+regex = { version = "1.9" }

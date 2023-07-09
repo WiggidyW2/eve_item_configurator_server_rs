@@ -1,6 +1,7 @@
-mod pb;
 mod service;
 mod validator;
+
+pub mod pb;
 
 mod typedef;
 pub use typedef::TypeId;

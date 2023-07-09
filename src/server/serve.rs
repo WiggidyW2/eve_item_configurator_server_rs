@@ -5,6 +5,7 @@ use super::{
     service::Service,
     validator::Validator,
 };
+use regex::Regex;
 use tonic;
 use tonic_web;
 
@@ -14,10 +15,20 @@ pub async fn serve(
     address: std::net::SocketAddr,
     server: &mut tonic::transport::Server,
     http1: bool,
+    weve_esi_address: &str,
+    buyback_client_address: String,
+    buyback_corp: pb::weve_esi::Entity,
 ) -> Result<(), Error> {
-    let service = pb::server::ItemConfiguratorServer::new(Service {
+    let service = pb::item_configurator_server::ItemConfiguratorServer::new(Service {
         accessor: AccessorWrapper(accessor),
         validator: Validator::new(client_id).await?,
+        weve_esi_client: pb::WeveEsiClient(prost_twirp::HyperClient::new(
+            hyper::Client::new(),
+            weve_esi_address,
+        )),
+        buyback_client: pb::buyback_client::BuybackClient::connect(buyback_client_address).await?,
+        buyback_contract_regex: Regex::new(r"[0123456789abcdef]{15,16}").unwrap(),
+        buyback_corp: buyback_corp,
     });
     let router = match http1 {
         true => server.add_service(tonic_web::enable(service)),

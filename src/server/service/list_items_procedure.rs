@@ -1,4 +1,4 @@
-use super::super::{error::Error, pb};
+use super::super::{error::Error, pb::item_configurator as pb};
 use super::error::ProtoFieldError;
 
 #[derive(Debug, Clone, Copy, PartialEq, Eq)]

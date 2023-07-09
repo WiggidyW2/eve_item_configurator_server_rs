@@ -1,3 +1,4 @@
+mod buyback_contracts;
 mod characters;
 mod grpc;
 mod list_items;

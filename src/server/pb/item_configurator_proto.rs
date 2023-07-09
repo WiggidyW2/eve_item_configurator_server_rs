@@ -184,6 +184,45 @@ pub struct DelCharactersReq {
     #[prost(string, repeated, tag="5")]
     pub characters: ::prost::alloc::vec::Vec<::prost::alloc::string::String>,
 }
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BuybackContract {
+    #[prost(message, optional, tag="1")]
+    pub esi_contract: ::core::option::Option<super::weve_esi_proto::ExchangeContract>,
+    #[prost(message, optional, tag="2")]
+    pub check_contract: ::core::option::Option<super::buyback_proto::Rep>,
+    #[prost(message, optional, tag="3")]
+    pub buy_contract: ::core::option::Option<super::buyback_proto::Rep>,
+    /// hash code of the contract
+    #[prost(string, tag="4")]
+    pub hash_code: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BuybackContractsReq {
+    #[prost(bool, tag="1")]
+    pub include_check: bool,
+    #[prost(bool, tag="2")]
+    pub include_buy: bool,
+    /// ESI refresh token (for authentication)
+    #[prost(string, tag="3")]
+    pub refresh_token: ::prost::alloc::string::String,
+    /// language for the contract
+    #[prost(string, tag="4")]
+    pub language: ::prost::alloc::string::String,
+}
+#[allow(clippy::derive_partial_eq_without_eq)]
+#[derive(Clone, PartialEq, ::prost::Message)]
+pub struct BuybackContractsRep {
+    #[prost(message, repeated, tag="1")]
+    pub contracts: ::prost::alloc::vec::Vec<BuybackContract>,
+    /// ESI refresh token (for authentication)
+    #[prost(string, tag="2")]
+    pub refresh_token: ::prost::alloc::string::String,
+    /// true if the refresh token is authorized
+    #[prost(bool, tag="3")]
+    pub authorized: bool,
+}
 #[derive(Clone, Copy, Debug, PartialEq, Eq, Hash, PartialOrd, Ord, ::prost::Enumeration)]
 #[repr(i32)]
 pub enum Query {

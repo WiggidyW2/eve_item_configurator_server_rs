@@ -4,15 +4,15 @@ use serde_json::Value as JsonValue;
 use std::collections::{HashMap, HashSet};
 
 impl<A: Accessor> Service<A> {
-    fn update_items_authorized_abort(&self, new_token: String) -> pb::UpdateRep {
-        pb::UpdateRep {
+    fn update_items_authorized_abort(&self, new_token: String) -> pb::item_configurator::UpdateRep {
+        pb::item_configurator::UpdateRep {
             refresh_token: new_token,
             authorized: true,
         }
     }
 
-    pub fn update_items_unauthorized(&self, new_token: String) -> pb::UpdateRep {
-        pb::UpdateRep {
+    pub fn update_items_unauthorized(&self, new_token: String) -> pb::item_configurator::UpdateRep {
+        pb::item_configurator::UpdateRep {
             refresh_token: new_token,
             authorized: false,
         }
@@ -20,9 +20,9 @@ impl<A: Accessor> Service<A> {
 
     pub async fn update_items_authorized(
         &self,
-        req: pb::UpdateReq,
+        req: pb::item_configurator::UpdateReq,
         new_token: String,
-    ) -> Result<pb::UpdateRep, Error> {
+    ) -> Result<pb::item_configurator::UpdateRep, Error> {
         let new_json_strings = req.json;
         let new_items = req.items;
 
@@ -131,7 +131,7 @@ impl<A: Accessor> Service<A> {
         }
 
         // Return the response
-        Ok(pb::UpdateRep {
+        Ok(pb::item_configurator::UpdateRep {
             refresh_token: new_token,
             authorized: true,
         })

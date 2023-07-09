@@ -5,10 +5,15 @@ use super::super::{
     validator::Validator,
 };
 use crate::character_validator::Response as ValidatorResponse;
+use regex::Regex;
 
 pub struct Service<A> {
     pub accessor: AccessorWrapper<A>,
     pub validator: Validator,
+    pub weve_esi_client: pb::WeveEsiClient,
+    pub buyback_client: pb::buyback_client::BuybackClient<tonic::transport::Channel>,
+    pub buyback_contract_regex: Regex,
+    pub buyback_corp: pb::weve_esi::Entity,
 }
 
 impl<A: Accessor> Service<A> {
@@ -16,8 +21,8 @@ impl<A: Accessor> Service<A> {
         &self,
         name: &str,
         token: &str,
-        kind: pb::AuthKind,
-        scope: pb::AuthScope,
+        kind: pb::item_configurator::AuthKind,
+        scope: pb::item_configurator::AuthScope,
     ) -> Result<ValidatorResponse, Error> {
         // Format the name to match the authorization endpoint
         let name = get_auth_name(name, kind, scope);
@@ -32,13 +37,16 @@ impl<A: Accessor> Service<A> {
         Ok(rep)
     }
 
-    pub async fn list_items(&self, req: pb::ListReq) -> Result<pb::ListRep, Error> {
+    pub async fn list_items(
+        &self,
+        req: pb::item_configurator::ListReq,
+    ) -> Result<pb::item_configurator::ListRep, Error> {
         let auth_rep = self
             .authorize(
                 &req.name,
                 &req.refresh_token,
-                pb::AuthKind::Read,
-                pb::AuthScope::Items,
+                pb::item_configurator::AuthKind::Read,
+                pb::item_configurator::AuthScope::Items,
             )
             .await?;
         if auth_rep.valid {
@@ -49,13 +57,16 @@ impl<A: Accessor> Service<A> {
         }
     }
 
-    pub async fn update_items(&self, req: pb::UpdateReq) -> Result<pb::UpdateRep, Error> {
+    pub async fn update_items(
+        &self,
+        req: pb::item_configurator::UpdateReq,
+    ) -> Result<pb::item_configurator::UpdateRep, Error> {
         let auth_rep = self
             .authorize(
                 &req.name,
                 &req.refresh_token,
-                pb::AuthKind::Write,
-                pb::AuthScope::Items,
+                pb::item_configurator::AuthKind::Write,
+                pb::item_configurator::AuthScope::Items,
             )
             .await?;
         if auth_rep.valid {
@@ -68,14 +79,14 @@ impl<A: Accessor> Service<A> {
 
     pub async fn list_characters(
         &self,
-        req: pb::ListCharactersReq,
-    ) -> Result<pb::ListCharactersRep, Error> {
+        req: pb::item_configurator::ListCharactersReq,
+    ) -> Result<pb::item_configurator::ListCharactersRep, Error> {
         let auth_rep = self
             .authorize(
                 &req.name,
                 &req.refresh_token,
-                pb::AuthKind::Read,
-                pb::AuthScope::Characters,
+                pb::item_configurator::AuthKind::Read,
+                pb::item_configurator::AuthScope::Characters,
             )
             .await?;
         if auth_rep.valid {
@@ -88,14 +99,14 @@ impl<A: Accessor> Service<A> {
 
     pub async fn del_characters(
         &self,
-        req: pb::DelCharactersReq,
-    ) -> Result<pb::DelCharactersRep, Error> {
+        req: pb::item_configurator::DelCharactersReq,
+    ) -> Result<pb::item_configurator::DelCharactersRep, Error> {
         let auth_rep = self
             .authorize(
                 &req.name,
                 &req.refresh_token,
-                pb::AuthKind::Write,
-                pb::AuthScope::Characters,
+                pb::item_configurator::AuthKind::Write,
+                pb::item_configurator::AuthScope::Characters,
             )
             .await?;
         if auth_rep.valid {
@@ -108,14 +119,14 @@ impl<A: Accessor> Service<A> {
 
     pub async fn add_characters(
         &self,
-        req: pb::AddCharactersReq,
-    ) -> Result<pb::AddCharactersRep, Error> {
+        req: pb::item_configurator::AddCharactersReq,
+    ) -> Result<pb::item_configurator::AddCharactersRep, Error> {
         let auth_rep = self
             .authorize(
                 &req.name,
                 &req.refresh_token,
-                pb::AuthKind::Write,
-                pb::AuthScope::Characters,
+                pb::item_configurator::AuthKind::Write,
+                pb::item_configurator::AuthScope::Characters,
             )
             .await?;
         if auth_rep.valid {
@@ -125,9 +136,33 @@ impl<A: Accessor> Service<A> {
             Ok(self.add_characters_unauthorized(auth_rep.refresh_token))
         }
     }
+
+    pub async fn list_bb_contracts(
+        &self,
+        req: pb::item_configurator::BuybackContractsReq,
+    ) -> Result<pb::item_configurator::BuybackContractsRep, Error> {
+        let auth_rep = self
+            .authorize(
+                "buyback",
+                &req.refresh_token,
+                pb::item_configurator::AuthKind::Read,
+                pb::item_configurator::AuthScope::Contracts,
+            )
+            .await?;
+        if auth_rep.valid {
+            self.list_bb_contracts_authorized(req, auth_rep.refresh_token)
+                .await
+        } else {
+            Ok(self.list_bb_contracts_unauthorized(auth_rep.refresh_token))
+        }
+    }
 }
 
 // Format the name to match the authorization endpoint
-pub fn get_auth_name(name: &str, kind: pb::AuthKind, scope: pb::AuthScope) -> String {
+pub fn get_auth_name(
+    name: &str,
+    kind: pb::item_configurator::AuthKind,
+    scope: pb::item_configurator::AuthScope,
+) -> String {
     format!("{}_{}_{}", name, kind.as_str(), scope.as_str())
 }

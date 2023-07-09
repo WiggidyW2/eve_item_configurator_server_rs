@@ -6,8 +6,8 @@ use super::{
 use std::{cmp::max, collections::HashMap};
 
 impl<A: Accessor> Service<A> {
-    pub fn list_items_unauthorized(&self, new_token: String) -> pb::ListRep {
-        pb::ListRep {
+    pub fn list_items_unauthorized(&self, new_token: String) -> pb::item_configurator::ListRep {
+        pb::item_configurator::ListRep {
             items: Vec::new(),
             json: Vec::new(),
             market_groups: Vec::new(),
@@ -20,9 +20,9 @@ impl<A: Accessor> Service<A> {
 
     pub async fn list_items_authorized(
         &self,
-        req: pb::ListReq,
+        req: pb::item_configurator::ListReq,
         new_token: String,
-    ) -> Result<pb::ListRep, Error> {
+    ) -> Result<pb::item_configurator::ListRep, Error> {
         let procedure = Procedure::try_from(&req)?;
 
         let json_fut = match req.include_json {
@@ -131,7 +131,7 @@ impl<A: Accessor> Service<A> {
             ),
         };
 
-        Ok(pb::ListRep {
+        Ok(pb::item_configurator::ListRep {
             items: list_items,
             json: json,
             market_groups: market_groups.names,
@@ -144,7 +144,7 @@ impl<A: Accessor> Service<A> {
 }
 
 fn set_list_items(
-    items: &mut Vec<pb::ListItem>,
+    items: &mut Vec<pb::item_configurator::ListItem>,
     keep: Keep,
     mut market_group_indexes: Vec<u32>,
     mut category_indexes: Vec<u32>,
@@ -186,7 +186,7 @@ fn set_list_items(
             }
             _ => (),
         }
-        items.push(pb::ListItem {
+        items.push(pb::item_configurator::ListItem {
             type_id: type_id,
             enabled: enabled,
             json_idx: json_idx,
