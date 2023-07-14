@@ -9,7 +9,7 @@ edition = "2021"
 prost-twirp = { git = "https://github.com/shawnblakesley/prost-twirp.git" }
 sqlx = { version = "0.6.3", features = ["sqlite", "runtime-tokio-native-tls"] }
 tokio = { version = "1.28", features = ["rt-multi-thread"] }
-tonic = { version = "0.9", features = ["tls-roots"] }
+tonic = { version = "0.9" }
 hyper = { version = "0.14", features = ["client", "http1", "tcp"] }
 hyper-tls = { version = "0.5" }
 prost-wkt-types = { version = "0.4" }
