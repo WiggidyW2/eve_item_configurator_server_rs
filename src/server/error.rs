@@ -114,8 +114,8 @@ impl Into<tonic::Status> for Error {
             Self::JsonError(e) => e.into(),
             Self::ServeError(e) => tonic::Status::internal(e.to_string()),
             Self::WeveEsi(e) => tonic::Status::internal(e.to_string()),
-            Self::BuybackBuy(e) => e,
-            Self::BuybackCheck(e) => e,
+            Self::BuybackBuy(e) => tonic::Status::internal(e.to_string()),
+            Self::BuybackCheck(e) => tonic::Status::internal(e.to_string()),
         }
     }
 }
