@@ -335,6 +335,8 @@ pub struct ExchangeContractsReq {
     pub corporations: ::prost::alloc::vec::Vec<Entity>,
     #[prost(bool, tag = "3")]
     pub active_only: bool,
+    #[prost(bool, tag = "4")]
+    pub include_items: bool,
 }
 pub use ::prost_twirp::ServiceRequest;
 pub use ::prost_twirp::PTRes;

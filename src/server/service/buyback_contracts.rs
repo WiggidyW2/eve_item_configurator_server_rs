@@ -74,6 +74,7 @@ impl<A: Accessor> Service<A> {
                     characters: Vec::new(),
                     corporations: vec![self.buyback_corp.clone()],
                     active_only: true,
+                    include_items: req.include_items,
                 }
                 .into(),
             )

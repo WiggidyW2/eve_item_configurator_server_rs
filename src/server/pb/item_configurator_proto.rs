@@ -201,14 +201,16 @@ pub struct BuybackContract {
 #[derive(Clone, PartialEq, ::prost::Message)]
 pub struct BuybackContractsReq {
     #[prost(bool, tag="1")]
-    pub include_check: bool,
+    pub include_items: bool,
     #[prost(bool, tag="2")]
+    pub include_check: bool,
+    #[prost(bool, tag="3")]
     pub include_buy: bool,
     /// ESI refresh token (for authentication)
-    #[prost(string, tag="3")]
+    #[prost(string, tag="4")]
     pub refresh_token: ::prost::alloc::string::String,
     /// language for the contract
-    #[prost(string, tag="4")]
+    #[prost(string, tag="5")]
     pub language: ::prost::alloc::string::String,
 }
 #[allow(clippy::derive_partial_eq_without_eq)]
