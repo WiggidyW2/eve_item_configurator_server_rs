@@ -67,6 +67,7 @@ async fn main() -> Result<(), Error> {
         &env::weve_esi_address()?,
         env::buyback_address()?,
         env::buyback_corp()?,
+        env::buyback_contract_structure_token()?,
     )
     .await?;
     Ok(())

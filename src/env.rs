@@ -22,6 +22,10 @@ pub fn buyback_corp() -> Result<pb::weve_esi::Entity, EnvError> {
     })
 }
 
+pub fn buyback_contract_structure_token() -> Result<String, EnvError> {
+    env_get_assert("BUYBACK_CONTRACT_STRUCTURE_TOKEN")
+}
+
 pub fn esi_client_id() -> Result<String, EnvError> {
     env_get_assert("ESI_CLIENT_ID")
 }

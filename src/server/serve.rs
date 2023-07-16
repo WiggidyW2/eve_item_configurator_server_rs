@@ -18,6 +18,7 @@ pub async fn serve(
     weve_esi_address: &str,
     buyback_client_address: String,
     buyback_corp: pb::weve_esi::Entity,
+    buyback_contract_structure_token: String,
 ) -> Result<(), Error> {
     let service = pb::item_configurator_server::ItemConfiguratorServer::new(Service {
         accessor: AccessorWrapper(accessor),
@@ -29,6 +30,7 @@ pub async fn serve(
         buyback_client: pb::buyback_client::BuybackClient::connect(buyback_client_address).await?,
         buyback_contract_regex: Regex::new(r"[0123456789abcdef]{15,16}").unwrap(),
         buyback_corp: buyback_corp,
+        buyback_contract_structure_token: buyback_contract_structure_token,
     });
     let router = match http1 {
         true => server.add_service(tonic_web::enable(service)),

@@ -14,6 +14,7 @@ pub struct Service<A> {
     pub buyback_client: pb::buyback_client::BuybackClient<tonic::transport::Channel>,
     pub buyback_contract_regex: Regex,
     pub buyback_corp: pb::weve_esi::Entity,
+    pub buyback_contract_structure_token: String,
 }
 
 impl<A: Accessor> Service<A> {

@@ -75,6 +75,7 @@ impl<A: Accessor> Service<A> {
                     corporations: vec![self.buyback_corp.clone()],
                     active_only: true,
                     include_items: req.include_items,
+                    structure_token: self.buyback_contract_structure_token.clone(),
                 }
                 .into(),
             )

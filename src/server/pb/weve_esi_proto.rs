@@ -337,6 +337,8 @@ pub struct ExchangeContractsReq {
     pub active_only: bool,
     #[prost(bool, tag = "4")]
     pub include_items: bool,
+    #[prost(string, tag = "5")]
+    pub structure_token: ::prost::alloc::string::String,
 }
 pub use ::prost_twirp::ServiceRequest;
 pub use ::prost_twirp::PTRes;
